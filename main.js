@@ -1,4 +1,4 @@
-let Influx = require("influx")
+const Influx = require("influx")
 const express = require("express")
 const app = express()
 const os = require("os")
@@ -11,13 +11,14 @@ influx = new Influx.InfluxDB({
   password: credentials.password
 })
 
-const port = 3000
+const port = process.env.PORT || 3000
 
-app.get("/data", (req, res) => {
+app.get("/data/:serverID", (req, res) => {
+  const { serverID } = req.params
   try {
     influx
       .queryRaw(
-        "select * from  link WHERE serverID='86b65e5c-d1da-478f-af14-a8e2da03576b' ORDER BY time desc limit 1  "
+        `select * from  link WHERE serverID='${serverID}' ORDER BY time desc limit 1 `
       )
       .then(rawData => {
         let data = []
@@ -82,9 +83,18 @@ app.get("/data", (req, res) => {
 
         res.json(data)
       })
+      .catch(err => {
+        res.send({ ":: ERROR :: Query Error - Check SeverID": err, serverID })
+      })
   } catch (err) {
-    res.send(err)
+    res.send({ err })
   }
+})
+
+app.get("*", (req, res) => {
+  res.send({
+    Available_EndPoint: "/data/serverID"
+  })
 })
 
 // influx
