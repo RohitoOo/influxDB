@@ -3,6 +3,9 @@ const express = require("express")
 const app = express()
 const os = require("os")
 const credentials = require("./credentials")
+var cors = require("cors")
+
+app.use(cors())
 
 influx = new Influx.InfluxDB({
   host: credentials.host,
