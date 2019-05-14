@@ -31,7 +31,7 @@ app.get("/data/:serverID/link0", (req, res) => {
         rawData.results[0].series[0].values.map((value, index) => {
           if (index % 100 == 0) {
             data.push({
-              time: value[0],
+              time: value[0].slice(11, 16),
               bandwidth: value[1],
               cpeInBound: value[2],
               cpeOutBound: value[3],
@@ -74,15 +74,16 @@ app.get("/data/:serverID/link1", (req, res) => {
   try {
     influx
       .queryRaw(
-        `select * from  link WHERE serverID='${serverID}' AND linkID = '1' ORDER BY time desc limit 1000 `
+        `select * from  link WHERE serverID='${serverID}' AND linkID = '1' ORDER BY time desc limit 1 `
       )
       .then(rawData => {
         let data = []
 
         rawData.results[0].series[0].values.map((value, index) => {
+          console.log("TIME", value[0])
           if (index % 100 == 0) {
             data.push({
-              time: value[0],
+              time: value[0].slice(11, 16),
               bandwidth: value[1],
               cpeInBound: value[2],
               cpeOutBound: value[3],
@@ -133,7 +134,7 @@ app.get("/data/:serverID/link2", (req, res) => {
         rawData.results[0].series[0].values.map((value, index) => {
           if (index % 100 == 0) {
             data.push({
-              time: value[0],
+              time: value[0].slice(11, 16),
               bandwidth: value[1],
               cpeInBound: value[2],
               cpeOutBound: value[3],
