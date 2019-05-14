@@ -11,89 +11,172 @@ influx = new Influx.InfluxDB({
   password: credentials.password
 })
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 5000
 
-app.get("/data/:serverID", (req, res) => {
+// Query Server's Link 0
+
+app.get("/data/:serverID/link0", (req, res) => {
   const { serverID } = req.params
   try {
     influx
       .queryRaw(
-        `select * from  link WHERE serverID='${serverID}' ORDER BY time desc limit 1 `
+        `select * from  link WHERE serverID='${serverID}' AND linkID = '0' ORDER BY time desc limit 1000 `
       )
       .then(rawData => {
         let data = []
-        data.push({
-          column: rawData.results[0].series[0].columns[0],
-          data: rawData.results[0].series[0].values[0][0]
-        })
 
-        data.push({
-          column: rawData.results[0].series[0].columns[1],
-          data: rawData.results[0].series[0].values[0][1]
+        rawData.results[0].series[0].values.map((value, index) => {
+          if (index % 100 == 0) {
+            data.push({
+              time: value[0],
+              bandwidth: value[1],
+              cpeInBound: value[2],
+              cpeOutBound: value[3],
+              latency: value[4],
+              linkID: value[5],
+              lossIn: value[6],
+              lossOut: value[7],
+              recvBytes: value[8],
+              recvPackets: value[9],
+              sentBytes: value[10],
+              sentPackets: value[11],
+              serverID: value[12],
+              status: value[13],
+              symbol: value[14],
+              tunnelID: value[15],
+              usage: value[16],
+              usageCap: value[17],
+              weight: value[18]
+            })
+          }
         })
-        data.push({
-          column: rawData.results[0].series[0].columns[2],
-          data: rawData.results[0].series[0].values[0][2]
-        })
-
-        data.push({
-          column: rawData.results[0].series[0].columns[3],
-          data: rawData.results[0].series[0].values[0][3]
-        })
-        data.push({
-          column: rawData.results[0].series[0].columns[4],
-          data: rawData.results[0].series[0].values[0][4]
-        })
-        data.push({
-          column: rawData.results[0].series[0].columns[5],
-          data: rawData.results[0].series[0].values[0][5]
-        })
-        data.push({
-          column: rawData.results[0].series[0].columns[6],
-          data: rawData.results[0].series[0].values[0][6]
-        })
-        data.push({
-          column: rawData.results[0].series[0].columns[7],
-          data: rawData.results[0].series[0].values[0][7]
-        })
-        data.push({
-          column: rawData.results[0].series[0].columns[8],
-          data: rawData.results[0].series[0].values[0][8]
-        })
-        data.push({
-          column: rawData.results[0].series[0].columns[9],
-          data: rawData.results[0].series[0].values[0][9]
-        })
-        data.push({
-          column: rawData.results[0].series[0].columns[10],
-          data: rawData.results[0].series[0].values[0][10]
-        })
-        data.push({
-          column: rawData.results[0].series[0].columns[11],
-          data: rawData.results[0].series[0].values[0][11]
-        })
-        data.push({
-          column: rawData.results[0].series[0].columns[12],
-          data: rawData.results[0].series[0].values[0][12]
-        })
-        data.push({
-          column: rawData.results[0].series[0].columns[13],
-          data: rawData.results[0].series[0].values[0][13]
-        })
-
         res.json(data)
       })
       .catch(err => {
-        res.send({ ":: ERROR :: Query Error - Check SeverID": err, serverID })
+        res.send({
+          ":: ERROR :: Query Error - Check SeverID": err,
+          serverID,
+          link: "link0"
+        })
       })
   } catch (err) {
     res.send({ err })
   }
 })
 
+// Query Server's Link 1
+
+app.get("/data/:serverID/link1", (req, res) => {
+  const { serverID } = req.params
+  try {
+    influx
+      .queryRaw(
+        `select * from  link WHERE serverID='${serverID}' AND linkID = '1' ORDER BY time desc limit 1000 `
+      )
+      .then(rawData => {
+        let data = []
+
+        rawData.results[0].series[0].values.map((value, index) => {
+          if (index % 100 == 0) {
+            data.push({
+              time: value[0],
+              bandwidth: value[1],
+              cpeInBound: value[2],
+              cpeOutBound: value[3],
+              latency: value[4],
+              linkID: value[5],
+              lossIn: value[6],
+              lossOut: value[7],
+              recvBytes: value[8],
+              recvPackets: value[9],
+              sentBytes: value[10],
+              sentPackets: value[11],
+              serverID: value[12],
+              status: value[13],
+              symbol: value[14],
+              tunnelID: value[15],
+              usage: value[16],
+              usageCap: value[17],
+              weight: value[18]
+            })
+          }
+        })
+        res.json(data)
+      })
+      .catch(err => {
+        res.send({
+          ":: ERROR :: Query Error - Check SeverID": err,
+          serverID,
+          link: "link1"
+        })
+      })
+  } catch (err) {
+    res.send({ err })
+  }
+})
+
+// Query Server's Link 2
+
+app.get("/data/:serverID/link2", (req, res) => {
+  const { serverID } = req.params
+  try {
+    influx
+      .queryRaw(
+        `select * from  link WHERE serverID='${serverID}' AND linkID = '2' ORDER BY time desc limit 1000 `
+      )
+      .then(rawData => {
+        let data = []
+
+        rawData.results[0].series[0].values.map((value, index) => {
+          if (index % 100 == 0) {
+            data.push({
+              time: value[0],
+              bandwidth: value[1],
+              cpeInBound: value[2],
+              cpeOutBound: value[3],
+              latency: value[4],
+              linkID: value[5],
+              lossIn: value[6],
+              lossOut: value[7],
+              recvBytes: value[8],
+              recvPackets: value[9],
+              sentBytes: value[10],
+              sentPackets: value[11],
+              serverID: value[12],
+              status: value[13],
+              symbol: value[14],
+              tunnelID: value[15],
+              usage: value[16],
+              usageCap: value[17],
+              weight: value[18]
+            })
+          }
+        })
+        res.json(data)
+      })
+      .catch(err => {
+        res.send({
+          ":: ERROR :: Query Error - Check SeverID Or Link Number": err,
+          serverID,
+          link: "link2"
+        })
+      })
+  } catch (err) {
+    res.send({ err })
+  }
+})
+
+// Query Server's Link 3
+
+// Work In Progress
+
 app.get("*", (req, res) => {
   res.send({
-    Available_EndPoint: "/data/serverID"
+    Available_EndPoint: [
+      "/data/serverID/link0",
+      "/data/serverID/link1",
+      "/data/serverID/link2"
+    ]
   })
 })
 
