@@ -20,38 +20,37 @@ const port = process.env.PORT || 5000
 
 app.get("/data/:serverID/link0", (req, res) => {
   const { serverID } = req.params
+
   try {
     influx
       .queryRaw(
-        `select * from  link WHERE serverID='${serverID}' AND linkID = '0' ORDER BY time desc limit 10000 `
+        `select LAST("recvPackets") from  link WHERE serverID='${serverID}' AND linkID = '0' AND time > now() - 1h GROUP BY time(300s) ORDER BY time desc `
       )
       .then(rawData => {
         let data = []
 
         rawData.results[0].series[0].values.map((value, index) => {
-          if (index % 100 == 0) {
-            data.push({
-              time: value[0].slice(11, 16),
-              bandwidth: value[1],
-              cpeInBound: value[2],
-              cpeOutBound: value[3],
-              latency: value[4],
-              linkID: value[5],
-              lossIn: value[6],
-              lossOut: value[7],
-              recvBytes: value[8],
-              recvPackets: value[9],
-              sentBytes: value[10],
-              sentPackets: value[11],
-              serverID: value[12],
-              status: value[13],
-              symbol: value[14],
-              tunnelID: value[15],
-              usage: value[16],
-              usageCap: value[17],
-              weight: value[18]
-            })
-          }
+          data.push({
+            time: value[0].slice(11, 16),
+            bandwidth: value[1],
+            cpeInBound: value[2],
+            cpeOutBound: value[3],
+            latency: value[4],
+            linkID: value[5],
+            lossIn: value[6],
+            lossOut: value[7],
+            recvBytes: value[8],
+            recvPackets: value[9],
+            sentBytes: value[10],
+            sentPackets: value[11],
+            serverID: value[12],
+            status: value[13],
+            symbol: value[14],
+            tunnelID: value[15],
+            usage: value[16],
+            usageCap: value[17],
+            weight: value[18]
+          })
         })
         res.json(data)
       })
@@ -74,13 +73,12 @@ app.get("/data/:serverID/link1", (req, res) => {
   try {
     influx
       .queryRaw(
-        `select * from  link WHERE serverID='${serverID}' AND linkID = '1' ORDER BY time desc limit 1000 `
+        `select * from  link WHERE serverID='${serverID}' AND linkID = '1' AND time > now() - 1h ORDER BY time desc`
       )
       .then(rawData => {
         let data = []
 
         rawData.results[0].series[0].values.map((value, index) => {
-          console.log("TIME", value[0])
           if (index % 100 == 0) {
             data.push({
               time: value[0].slice(11, 16),
