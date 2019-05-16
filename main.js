@@ -23,7 +23,7 @@ app.get("/data/:serverID/link0", (req, res) => {
   try {
     influx
       .queryRaw(
-        `select * from  link WHERE serverID='${serverID}' AND linkID = '0' ORDER BY time desc limit 1000 `
+        `select * from  link WHERE serverID='${serverID}' AND linkID = '0' ORDER BY time desc limit 10000 `
       )
       .then(rawData => {
         let data = []
