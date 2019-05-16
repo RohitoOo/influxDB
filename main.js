@@ -2,19 +2,19 @@ const Influx = require("influx")
 const express = require("express")
 const app = express()
 const os = require("os")
-const credentials = require("./credentials")
+// const credentials = require("./credentials")
 var cors = require("cors")
 
 app.use(cors())
 
-influx = new Influx.InfluxDB({
-  host: credentials.host,
-  database: credentials.database,
-  username: credentials.username,
-  password: credentials.password
+let influx = new Influx.InfluxDB({
+  host: "159.89.115.92",
+  database: "ethica",
+  username: "admin",
+  password: "cfb50eda861bc22d57737736b09c4adb32c9796adc0492dd"
 })
 
-const port = process.env.PORT || 443
+const port = process.env.PORT || 5000
 
 // Query Server's Link 0
 
@@ -221,3 +221,5 @@ app.get("*", (req, res) => {
 app.listen(port, () => {
   console.log("We are live on port", port)
 })
+
+module.exports = app
