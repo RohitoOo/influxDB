@@ -14,7 +14,7 @@ influx = new Influx.InfluxDB({
   password: credentials.password
 })
 
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 443
 
 // Query Server's Link 0
 
